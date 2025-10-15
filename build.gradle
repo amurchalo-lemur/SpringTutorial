@@ -14,9 +14,8 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation 'org.springframework.boot:spring-boot-starter:3.5.6'
     implementation 'org.postgresql:postgresql:9.4.1208'
-    implementation 'org.springframework:spring-jdbc:7.0.0-M9'
-    implementation 'org.springframework.shell:spring-shell:1.2.0.RELEASE'
-    implementation 'org.springframework.shell:spring-shell-starter:3.4.1'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:4.0.0-M3'
+    implementation 'org.projectlombok:lombok:1.18.42'
 }
 
 test {

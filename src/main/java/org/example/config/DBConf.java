@@ -5,10 +5,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.convert.Property;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.sql.DataSource;
+import java.util.Properties;
+
 @Configuration
 @PropertySource("classpath:application.properties")
 public class DBConf {
@@ -26,7 +31,7 @@ public class DBConf {
 
 
     @Bean
-    public DriverManagerDataSource dataSource() {
+    public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setUrl(url);
         dataSource.setUsername(username);
@@ -35,9 +40,17 @@ public class DBConf {
         return dataSource;
     }
 
-    @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {return new JdbcTemplate(dataSource);}
 
     @Bean
-    public DataBaseService dataBaseService(JdbcTemplate jdbcTemplate){return new DataBaseService(jdbcTemplate);}
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource){
+        LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
+        entityManagerFactory.setDataSource(dataSource);
+        entityManagerFactory.setPackagesToScan("org.example.entities");
+        entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        return entityManagerFactory;
+    }
+
+    @Bean
+    public DataBaseService dataBaseService(LocalContainerEntityManagerFactoryBean entityManagerFactory){return new DataBaseService(entityManagerFactory);}
+
 }

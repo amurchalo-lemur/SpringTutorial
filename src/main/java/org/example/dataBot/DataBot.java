@@ -1,6 +1,6 @@
 package org.example.dataBot;
 
-import org.example.User;
+import org.example.entities.User;
 import org.example.service.DataBaseService;
 import org.example.service.I18nService;
 import org.example.service.IOService;
@@ -65,7 +65,7 @@ public class DataBot {
 
     private void update(String [] arrRequest){
         User user = new User(arrRequest[2], arrRequest[3], Integer.parseInt(arrRequest[4]), Boolean.parseBoolean(arrRequest[5]));
-        ioService.println(String.valueOf(user.getIsMan()));
+        ioService.println(String.valueOf(user.isMan()));
         dataBaseService.updateUser(Integer.parseInt(arrRequest[1]), user);
     }
 
@@ -92,7 +92,7 @@ public class DataBot {
         ioService.println(i18nService.getMessage("name") + ":" + user.getName());
         ioService.println(i18nService.getMessage("mail") + ":" + user.getMail());
         ioService.println(i18nService.getMessage("age") + ":" + user.getAge());
-        ioService.println(i18nService.getMessage("isman") + ":" + user.getIsMan());
+        ioService.println(i18nService.getMessage("isman") + ":" + user.isMan());
         ioService.println("--------<<----------");
     }
 

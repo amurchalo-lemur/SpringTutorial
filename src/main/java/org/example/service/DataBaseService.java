@@ -1,42 +1,104 @@
 package org.example.service;
 
-import org.example.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Query;
+import org.example.entities.User;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Service;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import javax.swing.text.html.parser.Entity;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class DataBaseService {
-    private final JdbcTemplate jdbcTemplate;
+    private final EntityManager entityManager;
 
-    public DataBaseService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public DataBaseService(LocalContainerEntityManagerFactoryBean entityManagerFactory) {
+        this.entityManager = entityManagerFactory.getObject().createEntityManager();
     }
 
     public List<User> printAllUsers(){
-        return jdbcTemplate.query("SELECT * FROM public.user", new BeanPropertyRowMapper<>(User.class));
+        try {
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createQuery("FROM User");
+            entityManager.getTransaction().commit();
+            return query.getResultList();
+        }catch (Exception e){
+            System.out.println("HQL Exception");
+        }finally {
+            entityManager.getTransaction().rollback();
+            entityManager.close();
+        }
+        return null;
     }
 
     public List<User> printNameParam(String value){
-        return jdbcTemplate.query("SELECT * FROM public.user WHERE name = ?", new Object[]{value}, new  BeanPropertyRowMapper<>(User.class));
+        try {
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createQuery("SELECT * FROM User WHERE name = ?1");
+            query.setParameter(1, value);
+            entityManager.getTransaction().commit();
+            return query.getResultList();
+        }catch (Exception e){
+            System.out.println("HQL Exception");
+        }finally {
+            entityManager.getTransaction().rollback();
+            entityManager.close();
+        }
+        return null;
     }
 
     public void removeUser(int id){
-        jdbcTemplate.update("DELETE FROM public.user WHERE id = ?", id);
+        try {
+            entityManager.getTransaction().begin();
+
+            Query query = entityManager.createQuery("DELETE FROM User WHERE id = ?1");
+            query.setParameter(1, id);
+            query.executeUpdate();
+
+            entityManager.getTransaction().commit();
+
+        }catch (Exception e){
+            System.out.println("HQL Exception");
+        }finally {
+            entityManager.getTransaction().rollback();
+            entityManager.close();
+        }
     }
 
-    public void addUser(User user){///////////
-        String sql = "INSERT INTO public.user (name, mail, age, isman) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, user.getName(), user.getMail(), user.getAge(), user.getIsMan());
+    public void addUser(User user){
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.persist(user);
+            entityManager.getTransaction().commit();
+        }catch (Exception e){
+            System.out.println("HQL Exception");
+        }finally {
+            entityManager.getTransaction().rollback();
+            entityManager.close();
+        }
     }
 
     public void updateUser(int id, User user){
-        jdbcTemplate.update("UPDATE public.user SET name = ?, mail = ? , age = ?, isman = ? WHERE id = ?", user.getName(), user.getMail(), user.getAge(), user.getIsMan(), id);
+        try {
+            entityManager.getTransaction().begin();
+
+            User originalUser = entityManager.find(User.class, id);
+            originalUser = user;
+            entityManager.merge(originalUser);
+
+            entityManager.getTransaction().commit();
+        }catch (Exception e){
+            System.out.println("HQL Exception");
+        }finally {
+            entityManager.getTransaction().rollback();
+            entityManager.close();
+        }
+
     }
 
 

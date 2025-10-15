@@ -1,10 +1,31 @@
-package org.example;
+package org.example.entities;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+@Entity
+@Table(name = "user", schema = "public")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "mail")
     private String mail;
+
+    @Column(name = "age")
     private long age;
+
+    @Column(name = "isman")
     private boolean isMan;
 
 
@@ -37,7 +58,7 @@ public class User {
         isMan = man;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -53,18 +74,7 @@ public class User {
         return age;
     }
 
-    public boolean getIsMan() {
+    public boolean isMan() {
         return isMan;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", mail='" + mail + '\'' +
-                ", age=" + age +
-                ", isMan=" + isMan +
-                '}';
     }
 }
