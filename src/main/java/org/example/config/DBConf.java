@@ -40,17 +40,4 @@ public class DBConf {
         return dataSource;
     }
 
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource){
-        LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
-        entityManagerFactory.setDataSource(dataSource);
-        entityManagerFactory.setPackagesToScan("org.example.entities");
-        entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        return entityManagerFactory;
-    }
-
-    @Bean
-    public DataBaseService dataBaseService(LocalContainerEntityManagerFactoryBean entityManagerFactory){return new DataBaseService(entityManagerFactory);}
-
 }

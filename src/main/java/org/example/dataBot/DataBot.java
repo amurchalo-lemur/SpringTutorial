@@ -70,7 +70,7 @@ public class DataBot {
     }
 
     public void find(String [] arrRequest){
-        List<User> users = new ArrayList<>();
+        Iterable<User> users = new ArrayList<>();
         if(arrRequest[0].equals("find-all")) {
             users = dataBaseService.printAllUsers();
             for(var c : users){
