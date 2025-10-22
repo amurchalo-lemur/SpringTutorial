@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service("bot")
 public class DataBot {
@@ -57,16 +58,19 @@ public class DataBot {
     }
 
     private void add(String [] arrRequest){
-        User user = new User(arrRequest[1], arrRequest[2], Integer.parseInt(arrRequest[3]), Boolean.parseBoolean(arrRequest[3]));
+        User user = new User(arrRequest[1], arrRequest[2], Integer.parseInt(arrRequest[3]), Boolean.parseBoolean(arrRequest[4]));
         dataBaseService.addUser(user);
     }
 
     private void remove(String [] arrRequest){dataBaseService.removeUser(Integer.parseInt(arrRequest[1]));}
 
     private void update(String [] arrRequest){
-        User user = new User(arrRequest[2], arrRequest[3], Integer.parseInt(arrRequest[4]), Boolean.parseBoolean(arrRequest[5]));
-        ioService.println(String.valueOf(user.isMan()));
-        dataBaseService.updateUser(Integer.parseInt(arrRequest[1]), user);
+        User user = dataBaseService.findById(Long.parseLong(arrRequest[1])).get();
+        user.setName(arrRequest[2]);
+        user.setMail(arrRequest[3]);
+        user.setAge(Long.parseLong(arrRequest[4]));
+        user.setMan(Boolean.parseBoolean(arrRequest[5]));
+        dataBaseService.updateUser(user);
     }
 
     public void find(String [] arrRequest){

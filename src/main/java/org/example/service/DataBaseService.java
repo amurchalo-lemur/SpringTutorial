@@ -41,11 +41,12 @@ public class DataBaseService {
         userRepositoryCrudInterface.save(user);
     }
 
-    public void updateUser(long id, User user){
-        Optional<User> user1 = userRepositoryCrudInterface.findById(id);
-        userRepositoryCrudInterface.save(user1.get());
+    public void updateUser(User user){
+        userRepositoryCrudInterface.save(user);
     }
 
-
+    public Optional<User> findById(long id){
+        return userRepositoryCrudInterface.findById(id);
+    }
 
 }

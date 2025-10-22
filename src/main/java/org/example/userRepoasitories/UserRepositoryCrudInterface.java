@@ -8,12 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public interface UserRepositoryCrudInterface extends CrudRepository<User, Long> {
 
-
-    @Query("select * from public.user a where a.name = :name")
     List<User> findByName(@Param("name") String name);
-
 
 }
